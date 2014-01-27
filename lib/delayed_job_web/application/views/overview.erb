@@ -11,7 +11,7 @@
   </tr>
   <tr>
     <td class="status">
-      <a href="<%= u('/enqueued') %>">Enqueued Jobs</a>
+      <a href="<%= u('/enqueued') %>?queues=<%= @queues.join(",") %>">Enqueued Jobs</a>
     </td>
     <td>
       <%= delayed_job.count %>
@@ -19,26 +19,26 @@
   </tr>
   <tr>
     <td class="status">
-      <a href="<%= u('/working') %>">Working Jobs</a>
+      <a href="<%= u('/working') %>?queues=<%= @queues.join(",") %>">Working Jobs</a>
     </td>
     <td>
-      <%= delayed_jobs(:working).count %>
+      <%= delayed_jobs(:working, @queues).count %>
     </td>
   </tr>
   <tr>
     <td class="status">
-      <a href="<%= u('/pending') %>">Pending Jobs</a>
+      <a href="<%= u('/pending') %>?queues=<%= @queues.join(",") %>">Pending Jobs</a>
     </td>
     <td>
-      <%= delayed_jobs(:pending).count %>
+      <%= delayed_jobs(:pending, @queues).count %>
     </td>
   </tr>
   <tr class="<%= delayed_jobs(:failed).count > 0 ? 'failure' : '' %>">
     <td class="status">
-      <a href="<%= u('/failed') %>">Failed Jobs</a>
+      <a href="<%= u('/failed') %>?queues=<%= @queues.join(",") %>">Failed Jobs</a>
     </td>
     <td>
-      <%= delayed_jobs(:failed).count %>
+      <%= delayed_jobs(:failed, @queues).count %>
     </td>
   </tr>
 </table>

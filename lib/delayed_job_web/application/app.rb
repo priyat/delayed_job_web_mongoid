@@ -20,9 +20,15 @@ class DelayedJobWeb < Sinatra::Base
   def per_page
     20
   end
+  
+  def queues
+    (params[:queues] || "").split(",").map{|queue| queue.strip}.uniq.compact
+  end
 
   def url_path(*path_parts)
-    [ path_prefix, path_parts ].join("/").squeeze('/')
+    url = [ path_prefix, path_parts ].join("/").squeeze('/')
+    url += "?queues=#{queues.join(",")}" unless queues.empty?
+    url
   end
  alias_method :u, :url_path
 
@@ -51,6 +57,7 @@ class DelayedJobWeb < Sinatra::Base
 
   get '/overview' do
     if delayed_job
+      @queues = queues
       erb :overview
     else
       @message = "Unable to connected to Delayed::Job database"
@@ -64,8 +71,9 @@ class DelayedJobWeb < Sinatra::Base
 
   %w(enqueued working pending failed).each do |page|
     get "/#{page}" do
-      @jobs = delayed_jobs(page.to_sym).order('created_at desc, id desc').offset(start).limit(per_page)
-      @all_jobs = delayed_jobs(page.to_sym)
+      @queues   = queues
+      @jobs     = delayed_jobs(page.to_sym, queues).order('created_at desc, id desc').offset(start).limit(per_page)
+      @all_jobs = delayed_jobs(page.to_sym, queues)
       erb page.to_sym
     end
   end
@@ -93,12 +101,14 @@ class DelayedJobWeb < Sinatra::Base
   end
 
   post "/requeue/all" do
-    delayed_jobs(:failed).update_all(:run_at => Time.now, :failed_at => nil)
+    delayed_jobs(:failed, queues).update_all(:run_at => Time.now, :failed_at => nil)
     redirect back
   end
 
-  def delayed_jobs(type)
-    delayed_job.where(delayed_job_sql(type))
+  def delayed_jobs(type, queues = [])
+    delayed_jobs = delayed_job.where(delayed_job_sql(type))
+    delayed_jobs = delayed_job.where(delayed_job_queues_sql(queues)) unless queues.empty?
+    delayed_jobs
   end
 
   def delayed_job_sql(type)
@@ -112,6 +122,10 @@ class DelayedJobWeb < Sinatra::Base
     when :pending
       'attempts = 0'
     end
+  end
+  
+  def delayed_job_queues_sql(queues)
+    "queue IN ('#{queues.join("','")}')"
   end
 
   get "/?" do
@@ -148,7 +162,7 @@ class DelayedJobWeb < Sinatra::Base
     content_type "text/html"
     @polling = true
     # show(page.to_sym, false).gsub(/\s{1,}/, ' ')
-    @jobs = delayed_jobs(page.to_sym)
+    @jobs = delayed_jobs(page.to_sym, queues)
     erb(page.to_sym, {:layout => false})
   end
 
