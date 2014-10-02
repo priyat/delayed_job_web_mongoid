@@ -1,9 +1,9 @@
-delayed_job_web
-===============
+delayed_job_web_mongoid
+=======================
 
 A [resque][0] inspired (read: stolen) interface for delayed_job.
 This gem is written to work with rails 3 and 4 applications using
-activerecord.
+mongoid.
 
 Some features:
 
@@ -24,7 +24,7 @@ Quick Start For Rails 3 and 4 Applications
 Add the dependency to your Gemfile
 
 ```ruby
-gem "delayed_job_web"
+gem "delayed_job_web", git => "https://github.com/EmmN/delayed_job_web_mongoid.git"
 ```
 
 Install it...
