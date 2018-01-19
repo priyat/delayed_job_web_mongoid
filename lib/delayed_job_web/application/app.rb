@@ -26,6 +26,7 @@ class DelayedJobWeb < Sinatra::Base
 
   before do
     @queues = (params[:queues] || "").split(",").map{|queue| queue.strip}.uniq.compact
+    @search_field = params[:search_field]
   end
 
   def current_page
@@ -39,10 +40,14 @@ class DelayedJobWeb < Sinatra::Base
   def per_page
     20
   end
-  
+
   def url_path(*path_parts)
     url = [ path_prefix, path_parts ].join("/").squeeze('/')
-    url += "?queues=#{@queues.join(",")}" unless @queues.empty?
+    unless @queues.empty?
+      url += "?queues=#{@queues.join(",")}"
+      @search_field = "queue" if (@search_field.empty? && !@queues.empty?)
+      url += "&q=#{@search_field}"
+    end
     url
   end
 
@@ -103,8 +108,8 @@ class DelayedJobWeb < Sinatra::Base
 
   %w(enqueued working pending failed).each do |page|
     get "/#{page}" do
-      @jobs     = delayed_jobs(page.to_sym, @queues).order_by(:created_at.desc).offset(start).limit(per_page)
-      @all_jobs = delayed_jobs(page.to_sym, @queues)
+      @jobs     = delayed_jobs(page.to_sym, @search_field, @queues).order_by(:created_at.desc).offset(start).limit(per_page)
+      @all_jobs = delayed_jobs(page.to_sym, @search_field, @queues)
       erb page.to_sym
     end
   end
@@ -115,7 +120,7 @@ class DelayedJobWeb < Sinatra::Base
   end
 
   post "/requeue/all" do
-    delayed_jobs(:failed, @queues).update_all(:run_at => Time.now, :failed_at => nil)
+    delayed_jobs(:failed, @search_field, @queues).update_all(:run_at => Time.now, :failed_at => nil)
     redirect back
   end
 
@@ -132,11 +137,11 @@ class DelayedJobWeb < Sinatra::Base
   end
 
   post "/failed/clear" do
-    delayed_jobs(:failed, @queues).delete_all
+    delayed_jobs(:failed, @search_field, @queues).delete_all
     redirect u('failed')
   end
 
-  def delayed_jobs(type, queues = [])
+  def delayed_jobs(type, search_field = "", queues = [])
     rel = delayed_job
 
     rel =
@@ -151,7 +156,16 @@ class DelayedJobWeb < Sinatra::Base
         rel
       end
 
-    rel = rel.where(:queue => {"$in" => queues}) unless queues.empty?
+    unless queues.empty?
+      if search_field == 'queue'
+        rel = rel.where(:queue => {"$in" => queues})
+      elsif search_field == 'handler'
+        search_text = queues.first
+        rel = rel.where(:handler => {"$regex" => /#{search_text}/i})
+      elsif search_field == 'tags'
+        # rel = rel.where(:tags)
+      end
+    end
 
     rel
   end
@@ -190,7 +204,7 @@ class DelayedJobWeb < Sinatra::Base
     content_type "text/html"
     @polling = true
     # show(page.to_sym, false).gsub(/\s{1,}/, ' ')
-    @jobs = delayed_jobs(page.to_sym, @queues)
+    @jobs = delayed_jobs(page.to_sym, @search_field, @queues)
     erb(page.to_sym, {:layout => false})
   end
 
