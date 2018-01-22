@@ -26,7 +26,7 @@ class DelayedJobWeb < Sinatra::Base
 
   before do
     @queues = (params[:queues] || "").split(",").map{|queue| queue.strip}.uniq.compact
-    @search_field = params[:search_field]
+    @search_field = (params[:search_field] || "")
   end
 
   def current_page
