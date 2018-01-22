@@ -18,7 +18,7 @@
         <li>
           <form method="get" class="header-queues" action="" style="display:inline; width: 100%;">
             <select id='search_type' name="search_field">
-              <option value=""> Select Field</option>
+              <option> Select Field</option>
               <option value="queue">Queue</option>
               <option value="handler">Handler</option>
               <option value="tags">Tags</option>
@@ -45,7 +45,6 @@
     <script type="application/javascript">
       $('select#search_type').change(function () {
         var value = $(this).val();
-        alert(value);
         $(this).find('option[value="' + value + '"]').attr("selected", "selected").siblings().removeAttr('selected');
       })
     </script>
