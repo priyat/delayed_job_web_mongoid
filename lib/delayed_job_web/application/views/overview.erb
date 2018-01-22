@@ -33,7 +33,7 @@
       <%= delayed_jobs(:pending, @search_field, @queues).count %>
     </td>
   </tr>
-  <tr class="<%= delayed_jobs(:failed, @queues).count > 0 ? 'failure' : '' %>">
+  <tr class="<%= delayed_jobs(:failed, @search_field, @queues).count > 0 ? 'failure' : '' %>">
     <td class="status">
       <a href="<%= u('/failed') %>">Failed Jobs</a>
     </td>
