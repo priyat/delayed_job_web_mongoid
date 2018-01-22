@@ -156,12 +156,12 @@ class DelayedJobWeb < Sinatra::Base
         rel
       end
 
-    rel = unless queues.empty?
+    unless queues.empty?
       if search_field == 'queue'
-        rel.where(:queue => {"$in" => queues})
+        rel = rel.where(:queue => {"$in" => queues})
       elsif search_field == 'handler'
         search_text = queues.first
-        rel.where(:handler => {"$regex" => /#{search_text}/i})
+        rel = rel.where(:handler => {"$regex" => /#{search_text}/i})
       elsif search_field == 'tags'
         # rel = rel.where(:tags)
       end
