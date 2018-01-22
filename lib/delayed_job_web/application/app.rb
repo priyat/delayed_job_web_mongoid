@@ -46,7 +46,7 @@ class DelayedJobWeb < Sinatra::Base
     unless @queues.empty?
       url += "?queues=#{@queues.join(",")}"
       @search_field = "queue" if (@search_field.empty? && !@queues.empty?)
-      url += "&q=#{@search_field}"
+      url += "&search_field=#{@search_field}"
     end
     url
   end
