@@ -18,7 +18,7 @@
         <li>
           <form method="get" class="header-queues" action="" style="display:inline; width: 100%;">
             <select id='search_type' name="search_field">
-              <option> Select Field</option>
+              <option value=""> Select Field</option>
               <option value="queue">Queue</option>
               <option value="handler">Handler</option>
               <option value="tags">Tags</option>
@@ -47,6 +47,23 @@
         var value = $(this).val();
         $(this).find('option[value="' + value + '"]').attr("selected", "selected").siblings().removeAttr('selected');
       })
+      $("form#add_tags").submit(function (event) {
+        var tags = [];
+        event.preventDefault();
+        $('li.job a.job_id').map(function(){tags.push($(this).text())});
+        console.log('**************************************************************');
+        console.log(tags);
+        $.ajax({
+          type: 'POST',
+          url: '/add_tags',
+          headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
+          data: {tags: tags},
+          dataType: 'json',
+          success : function(json){
+            console.log(json);
+          }
+        });
+      });
     </script>
     <script src="<%= u("javascripts/application.js") %>" type="text/javascript"></script>
   </body>

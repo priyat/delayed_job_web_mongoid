@@ -141,6 +141,14 @@ class DelayedJobWeb < Sinatra::Base
     redirect u('failed')
   end
 
+  post "/add_tags" do
+    jobs = delayed_job
+    tags = params[:tags]
+    add_tags_query = {:$addToSet => {:tags => {:$each => tags}}}
+    jobs.update_all(add_tags_query)
+    redirect back
+  end
+
   def delayed_jobs(type, search_field = "", queues = [])
     rel = delayed_job
 
