@@ -50,10 +50,9 @@
       $("form#add_tags").submit(function (event) {
         event.preventDefault();
         var ids = [];
-        var tags = $('form#add_tags input[name=tag]').val().split(',');
+        var input = $('form#add_tags input[name=tag]').val().split(',');
+        var tags = $.map(input, $.trim);
         $('li.job a.job_id').map(function(){ids.push($(this).text())});
-        console.log('**************************************************************');
-        console.log(tags);
         $.ajax({
           type: 'POST',
           url: '/delayed_job/add_tags',
