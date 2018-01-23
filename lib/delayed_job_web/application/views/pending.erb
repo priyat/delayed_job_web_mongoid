@@ -1,4 +1,10 @@
-<h1>Pending</h1>
+<div style="width:50%;">
+  <h1 style="width:20%;float:left;">Pending Jobs</h1>
+  <form method="post" id="add_tags" class="header-queues" action="" style="width:50%;float:left;">
+    <input name="tag" type="text" value="" style="width:200px;margin:3px;height:15px;" placeholder="Tag name" />
+    <input type="submit" value="Add Tag" />
+  </form>
+</div>
 <% if @jobs.any? %>
   <form action="<%= u('requeue/all') %>" method="POST">
     <%= csrf_token_tag %>
