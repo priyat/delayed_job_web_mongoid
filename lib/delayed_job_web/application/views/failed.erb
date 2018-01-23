@@ -6,11 +6,11 @@
   </form>
 </div>
 <% if @jobs.any? %>
-  <form action="<%= u('failed/clear') %>" method="POST">
+  <form action="<%= u('failed/clear') %>" method="POST" style="clear:both;">
     <%= csrf_token_tag %>
     <input type="submit" value="Clear Failed Jobs"></input>
   </form>
-  <form action="<%= u('requeue/all') %>" method="POST">
+  <form action="<%= u('requeue/all') %>" method="POST" style="clear:both;">
     <%= csrf_token_tag %>
     <input type="submit" value="Retry Failed Jobs"></input>
   </form>

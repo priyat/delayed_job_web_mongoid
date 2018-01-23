@@ -6,7 +6,7 @@
   </form>
 </div>
 <% if @jobs.any? %>
-  <form action="<%= u('requeue/all') %>" method="POST">
+  <form action="<%= u('requeue/all') %>" method="POST" style="clear:both;">
     <%= csrf_token_tag %>
     <input type="submit" value="Enqueue All Immediately"></input>
   </form>
