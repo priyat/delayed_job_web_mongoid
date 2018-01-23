@@ -144,8 +144,9 @@ class DelayedJobWeb < Sinatra::Base
   post "/add_tags" do
     jobs = delayed_job
     tags = params[:tags]
+    ids = params[:ids]
     add_tags_query = {:$addToSet => {:tags => {:$each => tags}}}
-    jobs.update_all(add_tags_query)
+    jobs.where(:_id.in => ids).update_all(add_tags_query)
     redirect back
   end
 

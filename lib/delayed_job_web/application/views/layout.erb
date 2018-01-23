@@ -48,16 +48,17 @@
         $(this).find('option[value="' + value + '"]').attr("selected", "selected").siblings().removeAttr('selected');
       })
       $("form#add_tags").submit(function (event) {
-        var tags = [];
         event.preventDefault();
-        $('li.job a.job_id').map(function(){tags.push($(this).text())});
+        var ids = [];
+        var tags = $('form#add_tags input[name=tag]').val().split(',');
+        $('li.job a.job_id').map(function(){ids.push($(this).text())});
         console.log('**************************************************************');
         console.log(tags);
         $.ajax({
           type: 'POST',
           url: '/delayed_job/add_tags',
           headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
-          data: {tags: tags},
+          data: {tags: tags, ids: ids},
           dataType: 'json',
           success : function(json){
             console.log(json);
