@@ -1,64 +1,46 @@
-<li class="job">
-  <dl>
-    <dt>ID</dt>
-    <dd>
-      <a name="<%= job.id %>"></a>
-      <a class="job_id" href="#<%= job.id %>"><%=h job.id %></a>
-      <div class="controls">
-        <form action="<%= u("requeue/#{job.id}") %>" method="post"><%= csrf_token_tag %><input type="submit" value="Retry"></input></form>
-        or
-        <form action="<%= u("remove/#{job.id}") %>" method="post"><%= csrf_token_tag %><input type="submit" value="Remove"></input></form>
-        or
-        <form action="<%= u("reload/#{job.id}") %>" method="post"><%= csrf_token_tag %><input type="submit" value="Reload"></input></form>
-      </div>
-    </dd>
-    <dt>Priority</dt>
-    <dd><%=h job.priority %></dd>
-    <dt>Attempts</dt>
-    <dd><%=h job.attempts %></dd>
-    <% if job.respond_to?(:queue) && job.queue %>
-      <dt>Queue</dt>
-      <dd><%=h job.queue %></dd>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Priority</th>
+      <th>Attempts</th>
+      <th>Queue</th>
+      <th>Handler</th>
+      <th>Run At</th>
+      <th>Updated At</th>
+      <th>Created At</th>
+      <th>Locked At</th>
+      <th>Locked By</th>
+      <th>Last Error</th>
+      <th>Failed At</th>
+      <th>Tags</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if jobs.any? %>
+      <% jobs.each do |job| %>
+        <tr>
+          <td><%= job.id %></td>
+          <td><%= job.priority%></td>
+          <td><%= job.attempts %></td>
+          <td><%= job.queue %></td>
+          <td><%= job.handler %></td>
+          <td><%= l(job.run_at, format: :short) %></td>
+          <td><%= l(job.updated_at, format: :short) %></td>
+          <td><%= l(job.created_at, format: :short) %></td>
+          <td><%= l(job.locked_at, format: :short) %></td>
+          <td><%= job.locked_by %></td>
+          <td><%= link_to truncate(job.last_error), job_path(job) %></td>
+          <td><%= l(job.failed_at, format: :short) %></td>
+          <td><%= job.tags %></td>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="13">
+          <p>No Jobs</p>
+        </td>
+      </tr>
     <% end %>
-    <dt>Handler</dt>
-    <dd>
-    <pre><%=h job.handler %></pre>
-    </dd>
-    <% if job.last_error %>
-      <dt>Last Error</dt>
-      <dd>
-        <div class="backtrace">
-          <pre><%=h job.last_error[0..100] + '...' %></pre>
-        </div>
-        <a class="backtrace" href="#">Toggle full message</a>
-        <div class="backtrace full hide">
-          <pre><%=h job.last_error %></pre>
-        </div>
-      </dd>
-    <% end %>
-    <% if job.run_at %>
-      <dt>Run At</dt>
-      <dd class="time">
-        <%=h job.run_at.rfc822 %>
-      </dd>
-    <% end %>
-    <% if job.locked_at %>
-      <dt>Locked At</dt>
-      <dd class="time">
-        <%=h job.locked_at.rfc822 %>
-      </dd>
-    <% end %>
-    <% if job.locked_by %>
-      <dt>Locked By</dt>
-      <dd>
-        <%=h job.locked_by %>
-      </dd>
-    <% end %>
-    <% if job.failed_at %>
-      <dt>Failed At</dt>
-      <dd>
-        <%=h job.failed_at %>
-      </dd>
-    <% end %>
-  </dl>
-</li>
+  </tbody>
+</table>
