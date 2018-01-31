@@ -24,13 +24,13 @@
           <td><%= job.priority%></td>
           <td><%= job.attempts %></td>
           <td><%= job.queue %></td>
-          <td><%= truncate(job.handler, length: 20) %></td>
+          <td><%= job.handler.slice(0..19) + "..." %></td>
           <td><%= job.run_at %></td>
           <td><%= job.updated_at %></td>
           <td><%= job.created_at %></td>
           <td><%= job.locked_at %></td>
           <td><%= job.locked_by %></td>
-          <td><%= truncate(job.last_error, length: 20) %></td>
+          <td><%= job.last_error.slice(0..19) + "..." if job.last_error%></td>
           <td><%= job.failed_at %></td>
           <td><%= job.tags %></td>
         </tr>
