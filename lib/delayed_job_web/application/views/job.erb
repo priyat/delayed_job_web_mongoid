@@ -17,8 +17,8 @@
     </tr>
   </thead>
   <tbody>
-    <% if jobs.any? %>
-      <% jobs.each do |job| %>
+    <% if @jobs.any? %>
+      <% @jobs.each do |job| %>
         <tr>
           <td><%= job.id %></td>
           <td><%= job.priority%></td>
