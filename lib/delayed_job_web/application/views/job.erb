@@ -21,7 +21,7 @@
     <% if @jobs.any? %>
       <% @jobs.each do |job| %>
         <tr>
-          <td><input type="checkbox" name="jobid" value="#{job.id}"></td>
+          <td><input type="checkbox" name="jobid" value=<%= job.id %>></td>
           <td><%= job.id %></td>
           <td><%= job.priority%></td>
           <td><%= job.attempts %></td>

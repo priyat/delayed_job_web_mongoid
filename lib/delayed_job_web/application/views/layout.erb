@@ -78,7 +78,7 @@
       $("form#delete_jobs").submit(function (event) {
         event.preventDefault();
         var ids = [];
-        $('table tbody tr td.job_id').map(function(){ids.push($(this).text())});
+        $('table tbody td input[name="jobid"]').map(function(){ids.push($(this).val())});
         $.ajax({
           type: 'DELETE',
           url: '/delayed_job/delete_jobs',
