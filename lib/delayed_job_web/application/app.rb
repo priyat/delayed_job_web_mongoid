@@ -150,6 +150,13 @@ class DelayedJobWeb < Sinatra::Base
     redirect back
   end
 
+  delete "/delete_jobs" do
+    jobs = delayed_job
+    ids = params[:ids]
+    jobs.where(:_id.in => ids).destroy_all
+    redirect back
+  end
+
   def delayed_jobs(type, search_field = "", queues = [])
     rel = delayed_job
 

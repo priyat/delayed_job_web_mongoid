@@ -5,7 +5,5 @@
 <p class="sub">
   <%= "Showing #{start} to #{start + per_page} of #{@all_jobs.count} working jobs." %>
 </p>
-<ul class="job">
-    <%= partial :job, {:collection => @jobs} %>
-</ul>
+<%= partial :job, {:collection => @jobs} %>
 <%= partial :next_more, :start => start, :total_size => @all_jobs.count, :per_page => per_page %>

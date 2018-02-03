@@ -1,6 +1,9 @@
-<!-- <div style="width:50%;"> -->
-  <h1 style="width:30%;float:left;">Pending Jobs</h1>
-  <form method="post" id="add_tags" action="" style="width:50%;float:left;margin:10px 0;">
+<div style="width:80%;">
+  <h1 style="width:20%;float:left;">Pending Jobs</h1>
+  <form method="delete" id="delete_jobs" class="header-queues" action="" style="width: 10%;float: left;margin: 15px 0;">
+    <input type="submit" value="Delete Jobs">
+  </form>
+  <form method="post" id="add_tags" action="" style="width:30%;float:left;margin:10px 0;">
     <input name="tag" type="text" value="" style="width:200px;margin:3px;height:15px;" placeholder="Tag name" />
     <input type="submit" value="Add Tag" />
   </form>
@@ -17,7 +20,5 @@
 <p class="sub" style="clear:both;">
   <%= "Showing #{start} to #{start + per_page} of #{@all_jobs.count} pending jobs." %>
 </p>
-<ul class="job">
-  <%= partial :job, {:collection => @jobs} %>
-</ul>
+<%= partial :job, {:collection => @jobs} %>
 <%= partial :next_more, :start => start, :total_size => @all_jobs.count, :per_page => per_page %>

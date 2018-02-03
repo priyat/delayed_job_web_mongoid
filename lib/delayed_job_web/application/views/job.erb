@@ -1,6 +1,7 @@
-<table class="table table-bordered">
+<table id="tblData" class="table table-bordered">
   <thead>
     <tr>
+      <th><input type="checkbox" id="chkParent"/></th></th>
       <th>ID</th>
       <th>Priority</th>
       <th>Attempts</th>
@@ -20,6 +21,7 @@
     <% if @jobs.any? %>
       <% @jobs.each do |job| %>
         <tr>
+          <td><input type="checkbox" name="jobid" value="#{job.id}"></td>
           <td><%= job.id %></td>
           <td><%= job.priority%></td>
           <td><%= job.attempts %></td>

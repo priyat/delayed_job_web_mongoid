@@ -33,28 +33,56 @@
     <div id="main">
       <%= yield %>
     </div>
-    <div id="footer">
-      <p>
-        Powered by
-        <a href="https://github.com/collectiveidea/delayed_job">delayed_job</a>
-        &amp;
-        <a href="https://github.com/ejschmitt/delayed_job_web">delayed_job_web</a>
-      </p>
-    </div>
     <script src="<%= u("javascripts/jquery-1.7.1.min.js") %>" type="text/javascript"></script>
     <script src="<%= u("javascripts/jquery.relatize_date.js") %>" type="text/javascript"></script>
     <script type="application/javascript">
+      $(document).ready(function() {
+        $('#chkParent').click(function() {
+            var isChecked = $(this).prop("checked");
+            $('#tblData tr:has(td)').find('input[type="checkbox"]').prop('checked', isChecked);
+        });
+
+        $('#tblData tr:has(td)').find('input[type="checkbox"]').click(function() {
+            var isChecked = $(this).prop("checked");
+            var isHeaderChecked = $("#chkParent").prop("checked");
+            if (isChecked == false & amp; & amp; isHeaderChecked)
+                $("#chkParent").prop('checked', isChecked);
+            else {
+                $('#tblData tr:has(td)').find('input[type="checkbox"]').each(function() {
+                    if ($(this).prop("checked") == false)
+                        isChecked = false;
+                });
+                $("#chkParent").prop('checked', isChecked);
+            }
+        });
+      });
+
       $("form#add_tags").submit(function (event) {
         event.preventDefault();
         var ids = [];
         var input = $('form#add_tags input[name=tag]').val().split(',');
         var tags = $.map(input, $.trim);
-        $('li.job a.job_id').map(function(){ids.push($(this).text())});
+        $('table tbody tr td.job_id').map(function(){ids.push($(this).text())});
         $.ajax({
           type: 'POST',
           url: '/delayed_job/add_tags',
           headers: { 'X-CSRF-TOKEN': $('meta[name="_token"]').attr('content') },
           data: {tags: tags, ids: ids},
+          dataType: 'json',
+          success : function(json){
+            console.log(json);
+          }
+        });
+      });
+
+      $("form#delete_jobs").submit(function (event) {
+        event.preventDefault();
+        var ids = [];
+        $('table tbody tr td.job_id').map(function(){ids.push($(this).text())});
+        $.ajax({
+          type: 'DELETE',
+          url: '/delayed_job/delete_jobs',
+          data: {ids: ids},
           dataType: 'json',
           success : function(json){
             console.log(json);
