@@ -94,8 +94,9 @@
         $('.modal').css("display", "none");
       });
 
-      $('button.moreInfo').click(function(){
-        $(this).siblings('div.modal').css("display", "block");
+      $('input[type="button"].moreInfo').click(function(){
+        id = $(this).attr('id')
+        $('div#' + id).siblings('div.modal').css("display", "block");
       });
     </script>
     <script src="<%= u("javascripts/application.js") %>" type="text/javascript"></script>
