@@ -89,6 +89,14 @@
           }
         });
       });
+
+      $('span.close').click(function(){
+        $('.modal').css("display", "none");
+      });
+
+      $('button.moreInfo').click(function(){
+        $(this).siblings('div.modal').css("display", "block");
+      });
     </script>
     <script src="<%= u("javascripts/application.js") %>" type="text/javascript"></script>
   </body>
