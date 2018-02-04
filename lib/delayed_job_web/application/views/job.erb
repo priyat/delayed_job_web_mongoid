@@ -40,10 +40,14 @@
           <div class="modal" id=<%= job.id %>>
             <div class="modal-content">
               <span class="close">&times;</span>
-              <div><div style="width:20%;">Handler:</div><div style="width:60%;"><%= job.handler%></div></div>
-              <% if job.last_error%>
-              <div><div style="width:20%;">Last Error:</div><div style="width:60%;"><%= job.last_error%></div></div>
-              <% end %>
+              <div class="detailedInfo">
+                <div class="moreInfolbl">Handler:</div>
+                <div class="moreInfoval"><%= job.handler%></div>
+                <% if job.last_error%>
+                <div class="moreInfolbl">Last Error:</div>
+                <div class="moreInfoval"><%= job.last_error%></div>
+                <% end %>
+              </div>
             </div>
           </div>
         </tr>
